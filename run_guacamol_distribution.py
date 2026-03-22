@@ -92,7 +92,7 @@ from guacamol.assess_distribution_learning import assess_distribution_learning
 
 from lacan import gen, lacan as lacan_module
 
-PROFILE = lacan_module.load_profile("chembl")
+PROFILE = lacan_module.load_profile("chembl_full")
 
 
 # ── Distribution generator ────────────────────────────────────────────────────
@@ -116,15 +116,15 @@ class LacanDistributionGenerator(DistributionMatchingGenerator):
                        distribution benchmarks typically request 10000 samples;
                        cache_multiplier=3 pre-generates 30000 molecules so
                        repeated calls get fresh non-overlapping slices.
-    threshold        : minimum LACAN score for generated molecules (default 0.002
+    threshold        : minimum LACAN score for generated molecules (default 0.001
                        — very permissive, keeps generation fast while filtering
                        clearly invalid structures)
     min_atoms        : minimum heavy atom count (default 14)
-    max_atoms        : maximum heavy atom count (default 35)
+    max_atoms        : maximum heavy atom count (default 45)
     """
 
     def __init__(self, profile, fragcorpus=None, n_jobs=-1, seed=42,
-                 cache_multiplier=3, threshold=0.002, min_atoms=14, max_atoms=35):
+                 cache_multiplier=3, threshold=0.001, min_atoms=14, max_atoms=45):
         self.profile = profile
         self.fragcorpus = fragcorpus
         self.n_jobs = n_jobs
@@ -187,9 +187,9 @@ def run_distribution_benchmark(
         n_jobs=-1,
         seed=42,
         cache_multiplier=3,
-        threshold=0.002,
+        threshold=0.001,
         min_atoms=14,
-        max_atoms=35,
+        max_atoms=45,
 ):
     """Run the GuacaMol distribution learning benchmark suite.
 
@@ -286,7 +286,7 @@ def _parse_args():
         help="Pre-generate this multiple of the requested sample count",
     )
     parser.add_argument(
-        "--threshold", type=float, default=0.002,
+        "--threshold", type=float, default=0.001,
         help="Minimum LACAN score for generated molecules",
     )
     parser.add_argument(
@@ -294,7 +294,7 @@ def _parse_args():
         help="Minimum heavy atom count",
     )
     parser.add_argument(
-        "--max_atoms", type=int, default=35,
+        "--max_atoms", type=int, default=45,
         help="Maximum heavy atom count",
     )
     return parser.parse_args()
@@ -312,3 +312,4 @@ if __name__ == "__main__":
         min_atoms=args.min_atoms,
         max_atoms=args.max_atoms,
     )
+
